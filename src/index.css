@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 *{
   margin: 0;
   padding: 0;
@@ -10,8 +14,78 @@
 }
 
 .tiptap {
-  min-height: 200px;
-  border: 2px solid black;
+  min-height: 90vh;
+  border: 2px solid blue;
   width: 80%;
   margin: 0 auto;
+  padding: 1.5em 1.5em;
+  line-height:1.5em;
+}
+
+.editable-container{
+  width: 80%;
+  margin: 0 auto;
+}
+
+.tableWrapper {
+  padding: 1rem 0;
+  overflow-x: auto;
+}
+
+td, th {
+      border: 2px solid #ced4da;
+      box-sizing: border-box;
+      min-width: 6em;
+      padding: 3px 5px;
+      position: relative;
+}
+
+ th {
+      background-color: #f1f3f5;
+      font-weight: bold;
+      text-align: left;
+    }
+
+table {
+    border-collapse: collapse;
+    margin: 0;
+    overflow: hidden;
+    table-layout: fixed;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  line-height:1.5em;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height:1.5em;
+}
+
+h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+}
+
+/* Paragraph Style */
+p {
+  font-size: 1em;
+  /* Other styles like line-height, color, margin, etc. can be added as needed */
+}
+
+/* List Styles */
+ul, ol {
+  /* Style for both unordered and ordered lists */
+  margin-left: 20px;
+  list-style-type: disc;
+  /* Other list-specific styles like list-style-type can be added */
+}
+
+li {
+  /* Styles for list items */
+  margin-bottom: 5px;
+  /* Other styles like color, list-style, etc. can be added as needed */
 }

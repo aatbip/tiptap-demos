@@ -1,13 +1,23 @@
-import { Editor, EditorContent, FloatingMenu, useEditor } from '@tiptap/react'
+import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useEffect, useState } from 'react'
 import Paragraph from '@tiptap/extension-paragraph'
+import Table from '@tiptap/extension-table'
+import TableRow from '@tiptap/extension-table-row'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
+import BubbleMenuContainer from './BubbleMenu'
+import FloatingMenuContainer from './FloatingMenu'
 
 export default () => {
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Paragraph
+      Paragraph,
+      Table,
+      TableRow,
+      TableCell,
+      TableHeader
     ],
     content: `
       <p>
@@ -16,73 +26,30 @@ export default () => {
     `,
   })
 
-  const clearCurrentLineContent = (editor: Editor) => {
-    const { tr } = editor.state;
-    const { from, to } = editor.view.state.selection;
 
-    const $from = editor.state.doc.resolve(from);
-    const $to = editor.state.doc.resolve(to);
-
-    // Get the start and end positions of the current line
-    const startOfLine = $from.start();
-    const endOfLine = $to.end();
-
-    // Create a transaction to delete the content of the current line
-    const transaction = tr.delete(startOfLine, endOfLine);
-
-    // Apply the transaction to the editor
-    editor.view.dispatch(transaction);
-  };
-
-
-  const [isEditable, setIsEditable] = useState(true)
+  const [readMode, setReadMode] = useState(false)
 
   useEffect(() => {
     if (editor) {
-      editor.setEditable(isEditable)
+      editor.setEditable(!readMode)
     }
-  }, [isEditable, editor])
+  }, [readMode, editor])
+
+  if (!editor) {
+    return null;
+  }
 
   return (
     <>
-      <div>
-        <input type="checkbox" checked={isEditable} onChange={() => setIsEditable(!isEditable)} />
-        Editable
+      <div className="editable-container">
+        <input type="checkbox" checked={readMode} onChange={() => setReadMode(prev => !prev)} />
+        Reading Mode
       </div>
-      {editor && (
-        <FloatingMenu shouldShow={({ view }) => {
-          return (view.state.doc.content.lastChild?.textContent === "/")
-        }} editor={editor} tippyOptions={{ duration: 100 }}>
-          <button
-            onClick={() => {
-              clearCurrentLineContent(editor)
-              editor.chain().focus().toggleHeading({ level: 1 }).run()
-            }}
-            className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
-          >
-            h1
-          </button>
-          <button
-            onClick={() => {
-              clearCurrentLineContent(editor)
-              editor.chain().focus().toggleHeading({ level: 2 }).run()
-            }}
-            className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
-          >
-            h2
-          </button>
-          <button
-            onClick={() => {
-              clearCurrentLineContent(editor)
-              editor.chain().focus().toggleBulletList().run()
-            }
-            }
-            className={editor.isActive('bulletList') ? 'is-active' : ''}
-          >
-            bullet list
-          </button>
-        </FloatingMenu>
-      )}
+      {editor && <>
+        <FloatingMenuContainer editor={editor} />
+        <BubbleMenuContainer editor={editor} />
+      </>
+      }
       <EditorContent editor={editor} />
     </>
   )
